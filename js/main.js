@@ -12,14 +12,14 @@ let searchBtn = document.getElementById("searchBtn"),
   ingreadientBtn = document.getElementById("ingreadientBtn"),
   contactBtn = document.getElementById("contactBtn");
 let searchInputByName = document.getElementById("search-input-name");
-
-// let nameInput = document.getElementById("name")
-// let nameMessage = document.getElementById("nameMessage")
+let nextBtn = document.getElementById("nextBtn");
+let prevBtn = document.getElementById("prevBtn");
 
 $(document).ready(() => {
   searchByMealName("").then(() => {
-    $(".loading-screen").fadeOut(1500);
+    $(".loading-screen").fadeOut(700);
     $("body").css("overflow", "visible");
+    $(".section-loading-screen").fadeOut(300);
   });
 });
 
@@ -64,6 +64,10 @@ function linksAnimation() {
 // !-------------------------- Api Functions ---------------------------
 
 async function searchByMealName(term) {
+  rowData.innerHTML = ``;
+
+  $(".section-loading-screen").fadeIn(300);
+
   const apiResponse = await fetch(
     `https://www.themealdb.com/api/json/v1/1/search.php?s=${term}`
   );
@@ -71,6 +75,7 @@ async function searchByMealName(term) {
   let response = responseApi.meals;
   console.log(response);
   displayMeals(response);
+  $(".section-loading-screen").fadeOut(300);
 }
 // searchByMealName("");
 
@@ -106,29 +111,37 @@ categoryBtn.addEventListener("click", function () {
   closeNav();
   SearchContainer.innerHTML = "";
 });
+// ?--------- Get the Category and Display it
 
 async function Category() {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
+
   let apiResponse = await fetch(
     `https://www.themealdb.com/api/json/v1/1/categories.php`
   );
   let response = await apiResponse.json();
   let arrCategory = response.categories;
-  console.log(arrCategory);
+  // console.log(arrCategory);
   displayCategory(arrCategory);
+  $(".section-loading-screen").fadeOut(300);
 }
+
 function displayCategory(meals) {
   let cartona = "";
   for (let i = 0; i < meals.length; i++) {
     cartona += `
             <div class="col-md-3">
-            <div class="meal position-relative overflow-hidden rounded-2">
+            <div  onclick="getCategoryMeals('${meals[i].strCategory}')" 
+            class="meal position-relative overflow-hidden rounded-2">
               <img
                 class="w-100"
                 src="${meals[i].strCategoryThumb}"
                 alt="meal"
               />
               <div
-                class="overlay-meal position-absolute text-black text-center"
+              
+                class="overlay-meal cursor position-absolute text-black text-center"
               >
                 <h3 class="my-3">${meals[i].strCategory}</h3>
                 <p>${meals[i].strCategoryDescription
@@ -143,6 +156,20 @@ function displayCategory(meals) {
 
   rowData.innerHTML = cartona;
 }
+
+//
+async function getCategoryMeals(meal) {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
+  let apiResponse = await fetch(
+    `https://www.themealdb.com/api/json/v1/1/filter.php?i=${meal}`
+  );
+  let response = await apiResponse.json();
+  let arrCategoryMeal = response.meals;
+  // console.log(arrIngredient);
+  displayMeals(arrCategoryMeal);
+  $(".section-loading-screen").fadeOut(300);
+}
 // !--------------------------- Area Functions ---------------------------
 
 areaBtn.addEventListener("click", function () {
@@ -152,6 +179,8 @@ areaBtn.addEventListener("click", function () {
 });
 // ?--------- Get the Area and Display it
 async function getArea() {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
   let apiResponse = await fetch(
     `https://www.themealdb.com/api/json/v1/1/list.php?a=list`
   );
@@ -159,6 +188,7 @@ async function getArea() {
   let arrArea = response.meals;
   console.log(arrArea);
   displayArea(arrArea);
+  $(".section-loading-screen").fadeOut(300);
 }
 function displayArea(area) {
   let cartona = "";
@@ -180,6 +210,9 @@ function displayArea(area) {
 // ?--------- Get the Area Meals and Display it when click on this Area
 
 async function getAreaMeals(area) {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
+
   let apiResponse = await fetch(
     `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
   );
@@ -187,6 +220,7 @@ async function getAreaMeals(area) {
   let arrArea = response.meals;
   console.log(arrArea);
   displayAreaMeals(arrArea);
+  $(".section-loading-screen").fadeOut(300);
 }
 function displayAreaMeals(area) {
   let cartona = "";
@@ -222,6 +256,8 @@ ingreadientBtn.addEventListener("click", function () {
 });
 // ?--------- Get the Ingredient and Display it
 async function getIngredient() {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
   SearchContainer.innerHTML = "";
   let apiResponse = await fetch(
     `https://www.themealdb.com/api/json/v1/1/list.php?i=list`
@@ -230,6 +266,7 @@ async function getIngredient() {
   let arrIngredient = response.meals;
   // console.log(arrIngredient);
   displayIngredient(arrIngredient);
+  $(".section-loading-screen").fadeOut(300);
 }
 function displayIngredient(ingredients) {
   let cartona = "";
@@ -255,6 +292,9 @@ function displayIngredient(ingredients) {
 // ?--------- Get the Ingredient Meals and Display it when click on this Ingredient
 
 async function getIngredientMeals(ingredient) {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
+
   let apiResponse = await fetch(
     `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`
   );
@@ -262,6 +302,7 @@ async function getIngredientMeals(ingredient) {
   let arrIngredient = response.meals;
   // console.log(arrIngredient);
   displayIngredientMeals(arrIngredient);
+  $(".section-loading-screen").fadeOut(300);
 }
 function displayIngredientMeals(ingredients) {
   let cartona = "";
@@ -290,6 +331,9 @@ function displayIngredientMeals(ingredients) {
 // ?--------- Get the Ingredient Meals Details and Display it when click on this Ingredient
 
 async function getIngredientMealDetails(mealId) {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
+  closeNav();
   SearchContainer.innerHTML = "";
   let apiResponse = await fetch(
     `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`
@@ -298,14 +342,13 @@ async function getIngredientMealDetails(mealId) {
   let arrIngredient = response.meals[0];
   console.log(arrIngredient);
   displayIngredientMealsDetails(arrIngredient);
+  $(".section-loading-screen").fadeOut(300);
 }
 function displayIngredientMealsDetails(ingredients) {
   let cartona = "";
   let Recipes = ``;
   let tags = ``;
-  // console.log(`${ingredients[0].strIngredient}`);
-  // console.log([`strIngredient${ingredients[i]}`]);
-  // console.log(ingredients['idMeal']);
+
   for (let i = 0; i < 20; i++) {
     if (ingredients[`strIngredient${i}`]) {
       Recipes += `<li class="alert alert-info m-1 p-1">${
@@ -324,6 +367,10 @@ function displayIngredientMealsDetails(ingredients) {
     <div class="col-md-4">
     <img class="w-100 rounded-2" src="${ingredients.strMealThumb}" alt="meals details">
     <h3 class="text-center mt-3">${ingredients.strMeal}</h3>
+    <div class="text-center d-flex justify-content-between mt-5">
+      <button onclick="prevMeals(${ingredients.idMeal})"  id="prevBtn" class="d-block btn btn-outline-dark px-3 py-2 text-white"><i class="fa-solid fa-angles-left"></i></button>
+      <button onclick="nextMeals(${ingredients.idMeal})" id="nextBtn" class="d-block btn btn-outline-dark px-3 py-2 text-white"><i class="fa-solid fa-angles-right"></i></button>
+    </div>
   </div>
   <div class="col-md-8">
     <div class="meals-details">
@@ -354,32 +401,38 @@ function displayIngredientMealsDetails(ingredients) {
 
   rowData.innerHTML = cartona;
 }
+function nextMeals(cuurentId) {
+  let id = cuurentId - 1;
+  if (getIngredientMealDetails(id) != null) {
+    getIngredientMealDetails(id);
+  } else {
+    getIngredientMealDetails(cuurentId);
+  }
+}
 
+function prevMeals(cuurentId) {
+  let id = cuurentId + 1;
+  console.log(id);
+  if (getIngredientMealDetails(id) != null) {
+    getIngredientMealDetails(id);
+  } else {
+    getIngredientMealDetails(cuurentId);
+  }
+}
 // var text =
 //   " Lorem ipsum dolor sit amet consectetur adipisicing elit. Et alias ipsum sit! Deleniti maiores ullam necessitatibus voluptatibus deserunt? Est, ipsa.";
 
 // let x = taxt.split(" ").slice(0, 20).join(" ");
 // console.log(x);
-// var arr ={
-
-//   strIngredient1: "macaroni",
-//   strIngredient2: "chicken stock",
-//   strIngredient3: "heavy cream",
-//   strIngredient4: "fajita seasoning",
-//   strIngredient5: "salt",
-//   strIngredient6: "chicken breast",
-//   strIngredient7: "olive oil",
-//   strIngredient8: "onion",
-
-//   }
-
-// console.log(arr.strIngredient1)
 
 // !-------------------------- Search Functions ---------------------------
 
 searchBtn.addEventListener("click", function () {
-  console.log("hi");
+  $(".section-loading-screen").fadeIn(300);
+
   displaySearchContainer();
+  $(".section-loading-screen").fadeOut(300);
+
   closeNav();
 });
 
@@ -406,6 +459,9 @@ function displaySearchContainer() {
 // ?---------------> search by name function  <---------------!
 
 async function SearchByName(name) {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
+
   rowData.innerHTML = "";
   let apiResponse = await fetch(
     `https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`
@@ -418,10 +474,14 @@ async function SearchByName(name) {
   } else {
     displaySearchMeals([]);
   }
+  $(".section-loading-screen").fadeOut(300);
 }
 // ?---------------> search by First Leter function  <---------------!
 
 async function SearchByFirstLeter(letter) {
+  rowData.innerHTML = ``;
+  $(".section-loading-screen").fadeIn(300);
+
   rowData.innerHTML = "";
   if (letter !== "") {
     let apiResponse = await fetch(
@@ -436,6 +496,7 @@ async function SearchByFirstLeter(letter) {
       displaySearchMeals([]);
     }
   }
+  $(".section-loading-screen").fadeOut(300);
 }
 // ?---------------> Display search by name and search by First Leter function  <---------------!
 
@@ -468,7 +529,11 @@ function displaySearchMeals(meals) {
 
 contactBtn.addEventListener("click", function () {
   SearchContainer.innerHTML = "";
+  $(".section-loading-screen").fadeIn(300);
+
   showContacts();
+  $(".section-loading-screen").fadeOut(300);
+
   closeNav();
 });
 function showContacts() {
@@ -541,7 +606,25 @@ function showContacts() {
     repasswordInputTouched = true;
   });
   document.getElementById("submitBtn").addEventListener("click", function () {
-    window.alert("Submit");
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Your response has been done successfully",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    document.getElementById("nameInput").value = "";
+    document.getElementById("emailInput").value = "";
+    document.getElementById("phoneInput").value = "";
+    document.getElementById("ageInput").value = "";
+    document.getElementById("passwordInput").value = "";
+    document.getElementById("repasswordInput").value = "";
+    document.getElementById("nameInput").classList.remove("is-valid");
+    document.getElementById("emailInput").classList.remove("is-valid");
+    document.getElementById("phoneInput").classList.remove("is-valid");
+    document.getElementById("ageInput").classList.remove("is-valid");
+    document.getElementById("passwordInput").classList.remove("is-valid");
+    document.getElementById("repasswordInput").classList.remove("is-valid");
   });
 }
 
@@ -695,247 +778,3 @@ function repasswordValidation() {
     document.getElementById("passwordInput").value
   );
 }
-
-// // !-------------------------- contact Functions ---------------------------
-
-// contactBtn.addEventListener("click", function () {
-//   displayContactContainer();
-//   closeNav();
-//   SearchContainer.innerHTML = "";
-
-//   document.getElementById("submitBtn").addEventListener("click" , function()
-//  {
-//   if (
-//     inputsNameValidation() &&
-//     inputsEmailValidation() &&
-//     inputsPhoneValidation() &&
-//     inputsAgeValidation() &&
-//     inputsPasswordValidation() &&
-//     inputsRepasswordValidation()
-//   ) {
-//     // document.getElementById("submitBtn").removeAttribute("disabled");
-//     console.log("ok");
-//   } else {
-// console.log("no");  }
-
-//  })
-
-// });
-
-// function displayContactContainer() {
-//   SearchContainer.innerHTML = "";
-//   let cartona = "";
-//   cartona += `
-//     <div class="contact min-vh-100 d-flex align-items-center justify-content-center">
-//     <div class="container text-center ">
-//         <div class="row w-50 mx-auto g-4 ">
-//             <div class="col-md-6">
-//                 <div>
-//                     <input  onkeyup="inputsNameValidation(this.value)" id="name" class="form-control" type="text" placeholder="Enter Your Name">
-//                     <div id="nameMessage" class="alert alert-danger w-100 mt-2 d-none">
-//                       Special characters and numbers not allowed
-//                     </div>
-//                 </div>
-//             </div>
-//             <div class="col-md-6">
-//                 <div>
-//                     <input  id="email" onkeyup="inputsEmailValidation(this.value)" class="form-control" type="email" placeholder="Enter Your Email">
-//                      <div id="emailMessage" class="alert alert-danger w-100 mt-2 d-none">
-//                       Email not valid *exemple@yyy.zzz
-//                     </div>
-//                 </div>
-//             </div>
-//             <div class="col-md-6">
-//                 <div>
-//                     <input  id="phone" onkeyup="inputsPhoneValidation(this.value)" class="form-control" type="number" placeholder="Enter Your Phone">
-//                      <div id="phoneMessage" class="alert alert-danger w-100 mt-2 d-none">
-//                       Enter valid Phone Number
-//                     </div>
-//                 </div>
-//             </div>
-//             <div class="col-md-6">
-//                 <div>
-//                     <input  id="age" onkeyup="inputsAgeValidation(this.value)" class="form-control" type="number" placeholder="Enter Your Age">
-//                      <div id="ageMessage" class="alert alert-danger w-100 mt-2 d-none">
-//                       Enter valid age
-//                     </div>
-//                 </div>
-//             </div>
-//             <div class="col-md-6">
-//                 <div>
-//                     <input  id="password" onkeyup="inputsPasswordValidation(this.value)" class="form-control" type="password" placeholder="Enter Your Password">
-//                      <div id="passwordMessage" class="alert alert-danger w-100 mt-2 d-none">
-//                       Enter valid password *Minimum eight characters, at least one letter and one number:*
-//                     </div>
-//                 </div>
-//             </div>
-//             <div class="col-md-6">
-//                 <div>
-//                     <input  id="repassword" onkeyup="inputsRepasswordValidation(this.value)" class="form-control" type="password" placeholder="RePassword">
-//                      <div id="repasswordMessage" class="alert alert-danger w-100 mt-2 d-none">
-//                       Enter valid repassword
-//                     </div>
-//                 </div>
-//             </div>
-
-//         </div>
-
-//         <button id="submitBtn"  class="btn btn-outline-danger mx-4 mt-3" type="submit"> Submit</button>
-//     </div>
-//  </div>
-//         `;
-
-//   rowData.innerHTML = cartona;
-// }
-// // !----------------------- validation Function of Name ------------------------------[]
-// function inputsNameValidation(term) {
-//   // ?-------> check Validation Name Function ----------------------
-//   if (NameValidation(term)) {
-//     document
-//       .getElementById("nameMessage")
-//       .classList.replace("d-block", "d-none");
-//     document.getElementById("name").classList.add("is-valid");
-//     document.getElementById("name").classList.remove("is-invalid");
-//     return true;
-//   } else {
-//     document
-//       .getElementById("nameMessage")
-//       .classList.replace("d-none", "d-block");
-//     document.getElementById("name").classList.add("is-invalid");
-//     document.getElementById("name").classList.remove("is-valid");
-//     return false;
-//   }
-// }
-
-// // !----------------------- validation Function of Email -----------------------------
-
-// function inputsEmailValidation(term) {
-//   // ?-------> check Validation Email Function ----------------------
-//   if (emailValidation(term)) {
-//     document
-//       .getElementById("emailMessage")
-//       .classList.replace("d-block", "d-none");
-//     document.getElementById("email").classList.add("is-valid");
-//     document.getElementById("email").classList.remove("is-invalid");
-//     console.log("true");
-//     return true;
-//   } else {
-//     document
-//       .getElementById("emailMessage")
-//       .classList.replace("d-none", "d-block");
-//     document.getElementById("email").classList.add("is-invalid");
-//     document.getElementById("email").classList.remove("is-valid");
-//     return false;
-//   }
-// }
-// // !----------------------- validation Function of Phone Numbers ------------------------
-
-// function inputsPhoneValidation(term) {
-//   // ?-------> check Validation Phone Numbers Function ----------------------
-//   if (phoneValidation(term)) {
-//     document
-//       .getElementById("phoneMessage")
-//       .classList.replace("d-block", "d-none");
-//     document.getElementById("phone").classList.add("is-valid");
-//     document.getElementById("phone").classList.remove("is-invalid");
-//     console.log("true");
-//     return true;
-//   } else {
-//     document
-//       .getElementById("phoneMessage")
-//       .classList.replace("d-none", "d-block");
-//     document.getElementById("phone").classList.add("is-invalid");
-//     document.getElementById("phone").classList.remove("is-valid");
-//     return false;
-//   }
-// }
-// // !----------------------- validation Function of Age ------------------------------
-
-// function inputsAgeValidation(term) {
-//   // ?-------> check Validation Age Function ----------------------
-//   if (ageValidation(term)) {
-//     document
-//       .getElementById("ageMessage")
-//       .classList.replace("d-block", "d-none");
-//     document.getElementById("age").classList.add("is-valid");
-//     document.getElementById("age").classList.remove("is-invalid");
-//     return true;
-//   } else {
-//     document
-//       .getElementById("ageMessage")
-//       .classList.replace("d-none", "d-block");
-//     document.getElementById("age").classList.add("is-invalid");
-//     document.getElementById("age").classList.remove("is-valid");
-//     return false;
-//   }
-// }
-// // !----------------------- validation Function of Password ------------------------------
-
-// function inputsPasswordValidation(term) {
-//   // ?-------> check Validation Password Function ----------------------
-//   if (passwordValidation(term)) {
-//     document
-//       .getElementById("passwordMessage")
-//       .classList.replace("d-block", "d-none");
-//     document.getElementById("password").classList.add("is-valid");
-//     document.getElementById("password").classList.remove("is-invalid");
-//     return true;
-//   } else {
-//     document
-//       .getElementById("passwordMessage")
-//       .classList.replace("d-none", "d-block");
-//     document.getElementById("password").classList.add("is-invalid");
-//     document.getElementById("password").classList.remove("is-valid");
-//     return false;
-//   }
-// }
-// // !----------------------- validation Function of RePassword ------------------------------
-
-// function inputsRepasswordValidation(term) {
-//   console.log(repasswordValidation());
-//   // ?-------> check Validation Password Function ----------------------
-//   if (repasswordValidation()) {
-//     document
-//       .getElementById("repasswordMessage")
-//       .classList.replace("d-block", "d-none");
-//     document.getElementById("repassword").classList.add("is-valid");
-//     document.getElementById("repassword").classList.remove("is-invalid");
-//     return true;
-//   } else {
-//     document
-//       .getElementById("repasswordMessage")
-//       .classList.replace("d-none", "d-block");
-//     document.getElementById("repassword").classList.add("is-invalid");
-//     document.getElementById("repassword").classList.remove("is-valid");
-//     return false;
-//   }
-// }
-
-// // **--------------------------------------------**************************
-
-// function NameValidation(term) {
-//   return /^[a-zA-Z ]+$/.test(term);
-// }
-// function emailValidation(term) {
-//   return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-//     term
-//   );
-// }
-// function phoneValidation(term) {
-//   return /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(term);
-// }
-
-// function ageValidation(term) {
-//   return /^(0?[1-9]|[1-9][0-9]|[1][1-9][1-9]|200)$/.test(term);
-// }
-
-// function passwordValidation(term) {
-//   return /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{8,}$/.test(term);
-// }
-
-// function repasswordValidation() {
-//   return (
-//     document.getElementById("repassword").value ==
-//     document.getElementById("password").value
-//   );
-// }

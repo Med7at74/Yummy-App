@@ -13,7 +13,7 @@ i {
   transition: all 0.5s;
 }
 .side-nav {
-  z-index: 999;
+  z-index: 9999;
   background-color: #0d0d0d;
 }
 .nav-links ul li,
@@ -61,10 +61,15 @@ i {
 .loading-screen
 {
   display:flex;
-  
   z-index: 9999999;
 }
-
+.section-loading-screen
+{
+  position: absolute;
+  display:flex;
+  background-color: #0d0d0d;
+  z-index: 99;
+}
 @keyframes square-animation {
   0% {
    left: 0;
